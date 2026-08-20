@@ -1,0 +1,511 @@
+:root {
+  --bg: #1e1e1e;
+  --panel: #252526;
+  --line: #333333;
+
+  --fg: #d4d4d4;
+  --dim: #808080;
+
+  --add: #4ec9b0;
+  --del: #f14c4c;
+  --active: #4fc1ff;
+  --why: #dcdcaa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+
+  background: var(--bg);
+  color: var(--fg);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------
+   Header
+--------------------------------------------------------- */
+
+header {
+  flex: 0 0 auto;
+
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+
+  background: var(--panel);
+}
+
+header .brand {
+  color: var(--active);
+  font-weight: 700;
+}
+
+header .dim {
+  color: var(--dim);
+}
+
+header .totals {
+  margin-left: auto;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+.add {
+  color: var(--add);
+}
+
+.del {
+  color: var(--del);
+}
+
+/* ---------------------------------------------------------
+   Multi-session lanes
+--------------------------------------------------------- */
+
+#lanes {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  display: flex;
+  gap: 1px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  background: var(--line);
+}
+
+.lane {
+  flex: 1 0 340px;
+  min-width: 340px;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: var(--bg);
+}
+
+.lane.ended {
+  opacity: 0.65;
+}
+
+/* ---------------------------------------------------------
+   Lane header
+--------------------------------------------------------- */
+
+.lane-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 12px;
+
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.lane-label {
+  color: var(--active);
+  font-weight: 700;
+
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ended-tag {
+  flex: 0 0 auto;
+
+  color: var(--dim);
+  font-size: 11px;
+
+  border: 1px solid var(--line);
+  border-radius: 8px;
+
+  padding: 0 6px;
+}
+
+.lane-totals {
+  margin-left: auto;
+
+  color: var(--dim);
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   File tree
+--------------------------------------------------------- */
+
+.lane-tree {
+  padding: 10px 12px;
+}
+
+.node {
+  margin: 1px 0;
+}
+
+.dir {
+  color: var(--dim);
+  padding: 2px 0;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 3px 6px;
+
+  border-radius: 4px;
+
+  transition:
+    background 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.file .name {
+  flex: 1 1 auto;
+  min-width: 0;
+
+  font-weight: 600;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file .kind {
+  flex: 0 0 auto;
+
+  color: var(--dim);
+  font-size: 11px;
+}
+
+.file .blast {
+  flex: 0 0 auto;
+
+  color: #d7ba7d;
+  font-size: 11px;
+
+  background: rgba(215, 186, 125, 0.12);
+
+  border-radius: 8px;
+  padding: 0 6px;
+}
+
+.file .counts {
+  flex: 0 0 auto;
+  margin-left: auto;
+
+  white-space: nowrap;
+}
+
+.file.denied {
+  opacity: 0.5;
+}
+
+.file.denied .name {
+  text-decoration: line-through;
+}
+
+/* ---------------------------------------------------------
+   Add / delete distribution bar
+--------------------------------------------------------- */
+
+.bar {
+  flex: 0 0 120px;
+
+  display: inline-flex;
+
+  width: 120px;
+  height: 8px;
+
+  overflow: hidden;
+
+  border-radius: 3px;
+  background: #2a2a2a;
+}
+
+.bar .seg-add {
+  height: 100%;
+
+  background: var(--add);
+
+  transition: width 0.5s ease;
+}
+
+.bar .seg-del {
+  height: 100%;
+
+  background: var(--del);
+
+  transition: width 0.5s ease;
+}
+
+/* ---------------------------------------------------------
+   File pulse animation
+--------------------------------------------------------- */
+
+.file.pulse {
+  background: rgba(79, 193, 255, 0.22);
+
+  animation: file-pop 0.5s ease;
+}
+
+.file.pulse .name {
+  color: var(--active);
+}
+
+@keyframes file-pop {
+  0% {
+    transform: scale(0.98);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---------------------------------------------------------
+   Why / rationale panel
+--------------------------------------------------------- */
+
+.lane-why {
+  margin-top: auto;
+
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+
+  background: var(--panel);
+}
+
+.lane-why .head {
+  margin: 0 0 6px;
+
+  color: var(--active);
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lane-why .rationale {
+  margin-bottom: 12px;
+  color: var(--fg);
+}
+
+.lane-why pre {
+  margin: 0;
+
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.lane-why .b {
+  color: var(--del);
+}
+
+.lane-why .a {
+  color: var(--add);
+}
+
+/* ---------------------------------------------------------
+   Structure
+--------------------------------------------------------- */
+
+#why h2,
+.lane-why h2 {
+  margin: 0 0 6px;
+
+  color: var(--why);
+  font-size: 12px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.srow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.slabel {
+  min-width: 84px;
+
+  margin: 6px 0;
+
+  color: var(--dim);
+  font-size: 11px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.chip {
+  padding: 1px 8px;
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+
+  background: #2d2d2d;
+
+  font-size: 11px;
+}
+
+.chip.dep {
+  color: #d7ba7d;
+  border-color: #d7ba7d55;
+}
+
+.chip.add-chip {
+  color: var(--add);
+  border-color: #4ec9b055;
+}
+
+.chip.del-chip {
+  color: var(--del);
+  border-color: #f14c4c55;
+}
+
+/* ---------------------------------------------------------
+   Approve / Reject gate
+--------------------------------------------------------- */
+
+.gate {
+  display: flex;
+  gap: 8px;
+
+  margin-top: 16px;
+}
+
+.gbtn {
+  font: inherit;
+
+  padding: 5px 14px;
+
+  border: 1px solid var(--line);
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.gbtn:hover {
+  filter: brightness(1.15);
+}
+
+.gbtn:active {
+  transform: translateY(1px);
+}
+
+.gbtn.allow {
+  color: var(--add);
+
+  background: #10362f;
+  border-color: #4ec9b055;
+}
+
+.gbtn.deny {
+  color: var(--del);
+
+  background: #3a1f1f;
+  border-color: #f14c4c55;
+}
+
+/* ---------------------------------------------------------
+   Empty state
+--------------------------------------------------------- */
+
+.empty {
+  padding: 12px;
+
+  color: var(--dim);
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------
+   Scrollbars
+--------------------------------------------------------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555 var(--bg);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #555;
+  border: 2px solid var(--bg);
+  border-radius: 6px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* ---------------------------------------------------------
+   Smaller webview widths
+--------------------------------------------------------- */
+
+@media (max-width: 700px) {
+  header {
+    flex-wrap: wrap;
+  }
+
+  header .totals {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .lane {
+    flex-basis: 300px;
+    min-width: 300px;
+  }
+
+  .bar {
+    flex-basis: 80px;
+    width: 80px;
+  }
+}
