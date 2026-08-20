@@ -1,0 +1,55 @@
+{
+  "name": "claudechart",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Visualize the code changes Claude proposes/makes as an animated change map — terminal and VS Code frontends over one ChangeEvent contract.",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Visualization", "Other"],
+  "main": "./dist/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "claudechart.open",
+        "title": "ClaudeChart: Open Dashboard"
+      },
+      {
+        "command": "claudechart.newSession",
+        "title": "ClaudeChart: New Session"
+      }
+    ],
+    "configuration": {
+      "title": "ClaudeChart",
+      "properties": {
+        "claudechart.producer": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["src/demo.ts", "--gate", "--json"],
+          "description": "Node args for the ChangeEvent producer. Include --gate to require approve/reject per edit. Swap src/demo.ts → src/visualize.ts once the Agent SDK is installed."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "demo": "node src/demo.ts",
+    "viz": "node src/demo.ts --json | node src/render-terminal.ts",
+    "gate": "node src/gate-terminal.ts",
+    "npi": "node testlab/npi-edits.ts --json | node src/render-terminal.ts",
+    "npi:viewer": "node testlab/npi-edits.ts --html > testlab/npi-viewer.html",
+    "dashboard": "node testlab/dashboard-demo.ts --html > testlab/dashboard.html",
+    "dev": "node src/visualize.ts",
+    "build:ext": "tsc -p tsconfig.extension.json && node scripts/postbuild-ext.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5"
+  }
+}

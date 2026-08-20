@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ClaudeChart</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <span class="brand">ClaudeChart</span>
+      <span class="dim">multi-session dashboard</span>
+      <span class="totals" id="totals"></span>
+    </header>
+    <div id="lanes"><div class="empty">waiting for sessions…</div></div>
+    <!-- The VS Code extension rewrites this src to a webview URI + adds a CSP nonce.
+         Opened directly in a browser (file://), it loads app.js as-is and auto-plays a feed. -->
+    <script src="app.js"></script>
+  </body>
+</html>
